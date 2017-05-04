@@ -41,9 +41,9 @@ sudo echo "exit 0" >> /etc/rc.local
 
 mount /var/InstallationApplicationAWS/bucket
 
-sudo chmod +x /var/InstallationApplicationAWS/Tests/test.sh
-sudo chmod 777 /var/InstallationApplicationAWS/Tests/test.sh
-sudo chmod 777 /var/InstallationApplicationAWS/Tests/configyamllint.yml
-/var/InstallationApplicationAWS/Tests/test.sh
+#sudo chmod +x /var/InstallationApplicationAWS/Tests/test.sh
+#sudo chmod 777 /var/InstallationApplicationAWS/Tests/test.sh
+#sudo chmod 777 /var/InstallationApplicationAWS/Tests/configyamllint.yml
+#/var/InstallationApplicationAWS/Tests/test.sh
 
 echo "Done"
