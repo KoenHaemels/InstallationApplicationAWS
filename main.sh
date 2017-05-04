@@ -11,16 +11,14 @@ sudo rm -f /var/www/html/* -r
 sudo cp /var/InstallationApplicationAWS/WorkingSite/* /var/www/html/ -r -f
 clear
 
-#Installation Curl
-sudo apt-get install curl -y
-#Add the gcsfuse distribution URL as a package source and import its public key:
-export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
-echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-
-#Update the list of packages available and install gcsfuse.
-sudo apt-get update
-sudo apt-get install gcsfuse -y
+#Installation S3fs
+sudo apt-get install automake autotools-dev g++ git libcurl4-gnutls-dev libfuse-dev libssl-dev libxml2-dev make pkg-config
+git clone https://github.com/s3fs-fuse/s3fs-fuse.gitcd s3fs-fuse
+./autogen.sh
+./configure
+make
+sudo make install
+cd ..
 clear
 
 #Create location bucket +rights
@@ -28,9 +26,7 @@ sudo mkdir /var/InstallationApplicationAWS
 sudo mkdir /var/InstallationApplicationAWS/bucket
 sudo chmod 757 /var/InstallationApplicationAWS/bucket
 sudo chmod 777 /etc/fstab
-sudo echo "sudo s3fs https://s3.eu-central-1.amazonaws.com/test-stage-cvo /var/InstallationApplicationAWS/bucket -o allow_other -o passwd_file=/etc/passwd-s3fs -d -d -f -o f2 -o curldbg" >> /etc/fstab
-sudo chmod 777 /etc/fuse.conf
-sudo echo "user_allow_other" >> /etc/fuse.conf
+sudo echo "test-stage-cvo /var/InstallationApplicationAWS/bucket fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
 clear
 
 #Mount bucket at startup
@@ -41,9 +37,9 @@ sudo echo "exit 0" >> /etc/rc.local
 
 mount /var/InstallationApplicationAWS/bucket
 
-#sudo chmod +x /var/InstallationApplicationAWS/Tests/test.sh
-#sudo chmod 777 /var/InstallationApplicationAWS/Tests/test.sh
-#sudo chmod 777 /var/InstallationApplicationAWS/Tests/configyamllint.yml
-#/var/InstallationApplicationAWS/Tests/test.sh
+sudo chmod +x /var/InstallationApplicationAWS/Tests/test.sh
+sudo chmod 777 /var/InstallationApplicationAWS/Tests/test.sh
+sudo chmod 777 /var/InstallationApplicationAWS/Tests/configyamllint.yml
+/var/InstallationApplicationAWS/Tests/test.sh
 
 echo "Done"
