@@ -40,6 +40,7 @@ dependencies:
     - /bin/sed -i "s|imagename|packer-cvo-"${CIRCLE_BUILD_NUM}"|g" Credits/template.json
     - /bin/sed -i "s|owners_AZURE|"${OWNERS_AZURE}"|g" Credits/template.json
     - sudo echo "${ACCES_KEY_AZURE}:${ACCES_SECRET_KEY_AZURE}" > ~/passwd-s3fs
+    - sudo cat ~/passwd-s3fs
     # =======================
 
 test:
