@@ -8,7 +8,7 @@ sudo apt-get install apache2 -y
 sudo apt-get install php libapache2-mod-php -y
 #Clear any docs in /html and copy docs from Application into /html
 sudo rm -f /var/www/html/* -r
-sudo cp /var/InstallationApplicationGcloud/WorkingSite/* /var/www/html/ -r -f
+sudo cp /var/InstallationApplicationAWS/WorkingSite/* /var/www/html/ -r -f
 clear
 
 #Installation Curl
@@ -24,11 +24,11 @@ sudo apt-get install gcsfuse -y
 clear
 
 #Create location bucket +rights
-sudo mkdir /var/InstallationApplicationGcloud
-sudo mkdir /var/InstallationApplicationGcloud/bucket
-sudo chmod 757 /var/InstallationApplicationGcloud/bucket
+sudo mkdir /var/InstallationApplicationAWS
+sudo mkdir /var/InstallationApplicationAWS/bucket
+sudo chmod 757 /var/InstallationApplicationAWS/bucket
 sudo chmod 777 /etc/fstab
-sudo echo "test-stage-cvo /var/InstallationApplicationGcloud/bucket gcsfuse allow_other,rw,noauto,user,dir_mode=777,file_mode=777,key_file=/var/InstallationApplicationGcloud/Credits/account.json" >> /etc/fstab
+#sudo echo "test-stage-cvo /var/InstallationApplicationGcloud/bucket gcsfuse allow_other,rw,noauto,user,dir_mode=777,file_mode=777,key_file=/var/InstallationApplicationGcloud/Credits/account.json" >> /etc/fstab
 sudo chmod 777 /etc/fuse.conf
 sudo echo "user_allow_other" >> /etc/fuse.conf
 clear
@@ -36,14 +36,14 @@ clear
 #Mount bucket at startup
 sudo chmod 777 /etc/rc.local
 sudo sed -i '$ d' /etc/rc.local
-sudo echo "mount /var/InstallationApplicationGcloud/bucket" >> /etc/rc.local
+sudo echo "mount /var/InstallationApplicationAWS/bucket" >> /etc/rc.local
 sudo echo "exit 0" >> /etc/rc.local
 
-mount /var/InstallationApplicationGcloud/bucket
+mount /var/InstallationApplicationAWS/bucket
 
-sudo chmod +x /var/InstallationApplicationGcloud/Tests/test.sh
-sudo chmod 777 /var/InstallationApplicationGcloud/Tests/test.sh
-sudo chmod 777 /var/InstallationApplicationGcloud/Tests/configyamllint.yml
-/var/InstallationApplicationGcloud/Tests/test.sh
+sudo chmod +x /var/InstallationApplicationAWS/Tests/test.sh
+sudo chmod 777 /var/InstallationApplicationAWS/Tests/test.sh
+sudo chmod 777 /var/InstallationApplicationAWS/Tests/configyamllint.yml
+/var/InstallationApplicationAWS/Tests/test.sh
 
 echo "Done"
