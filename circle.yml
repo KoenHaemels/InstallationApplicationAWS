@@ -61,25 +61,19 @@ deployment:
   packer:
     branch: master
     commands:
-      # Change name to new BUILD ID
-      # =======================
-      - /bin/sed -i "s/template-file/template-file-"${BUILD}"/g" template.yml
-      - /bin/sed -i "s/packer-image-stage/packer-image-stage-"${BUILD}"/g" Credits/template.json
-      - /bin/sed -i "s/packer-image-stage/packer-image-stage-"${BUILD}"/g" template.yml
-      # =======================
       # Build new image
       # =======================
       - ~/bin/packer build Credits/template.json
       # =======================
       # Create new instance
       # =======================
-      - sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments create instance-"${BUILD}" --config template.yml --project=certain-nexus-865
+      #- sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments create instance-"${BUILD}" --config template.yml --project=certain-nexus-865
       # =======================
       # Rolling update
       # =======================
-      - sudo /opt/google-cloud-sdk/bin/gcloud alpha compute rolling-updates start --zone europe-west1-b --group=test-instance-groupmanager --template template-file-"${BUILD}" --max-num-concurrent-instances 1 --min-instance-update-time 1m
+      #- sudo /opt/google-cloud-sdk/bin/gcloud alpha compute rolling-updates start --zone europe-west1-b --group=test-instance-groupmanager --template template-file-"${BUILD}" --max-num-concurrent-instances 1 --min-instance-update-time 1m
       #- sudo /opt/google-cloud-sdk/bin/gcloud alpha compute instance-groups managed rolling-action start-update test-instance-groupmanager --version template=template-file-"${BUILD}" --min-ready 1m --max-unavailable 1 --zone europe-west1-b --force
       # =======================
       # Delete Previous instance
       # =======================
-      - sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments delete instance-"${PREVIOUSBUILD}" -q
+      #- sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments delete instance-"${PREVIOUSBUILD}" -q
