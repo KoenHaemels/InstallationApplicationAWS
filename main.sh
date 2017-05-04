@@ -32,10 +32,10 @@ clear
 #Mount bucket at startup
 sudo chmod 777 /etc/rc.local
 sudo sed -i '$ d' /etc/rc.local
-sudo echo "mount /var/InstallationApplicationAWS/bucket" >> /etc/rc.local
+sudo echo "sudo mount /var/InstallationApplicationAWS/bucket" >> /etc/rc.local
 sudo echo "exit 0" >> /etc/rc.local
 
-mount /var/InstallationApplicationAWS/bucket
+sudo mount /var/InstallationApplicationAWS/bucket
 
 sudo chmod +x /var/InstallationApplicationAWS/Tests/test.sh
 sudo chmod 777 /var/InstallationApplicationAWS/Tests/test.sh
