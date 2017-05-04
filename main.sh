@@ -12,7 +12,7 @@ sudo cp /var/InstallationApplicationAWS/WorkingSite/* /var/www/html/ -r -f
 clear
 
 #Installation S3fs
-sudo apt-get install automake autotools-dev g++ git libcurl4-gnutls-dev libfuse-dev libssl-dev libxml2-dev make pkg-config
+sudo apt-get install automake autotools-dev g++ git libcurl4-gnutls-dev libfuse-dev libssl-dev libxml2-dev make pkg-config -y
 git clone https://github.com/s3fs-fuse/s3fs-fuse.gitcd s3fs-fuse
 ./autogen.sh
 ./configure
