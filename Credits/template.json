@@ -2,7 +2,7 @@
  "provisioners": [
   {  
       "type": "file",
-      "source": "etc/passwd-s3fs",
+      "source": "~/passwd-s3fs",
       "destination": "~/passwd-s3fs"
     },
   {  
