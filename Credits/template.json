@@ -18,7 +18,7 @@
         "sudo git clone https://github.com/KoenHaemels/InstallationApplicationAWS.git",
         "cd InstallationApplicationAWS/",
         "sudo chmod +x main.sh",
-        "sudo mv ~/passwd-s3fs etc/",
+        "sudo mv ~/passwd-s3fs ~/etc/",
         "sudo mv ~/template.json Credits/",
         "./main.sh"
 ]
