@@ -41,8 +41,8 @@ dependencies:
     - /bin/sed -i "s|owners_AZURE|"${OWNERS_AZURE}"|g" Credits/template.json
     - sudo echo "${ACCES_KEY_AZURE}:${ACCES_SECRET_KEY_AZURE}" > ~/passwd-s3fs
     - sudo cat ~/passwd-s3fs
+    - sudo cp ~/passwd-s3fs Credits/passwd-s3fs
     # =======================
-
 test:
   override:
     # =======================
