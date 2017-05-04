@@ -3,7 +3,6 @@ machine:
   timezone: Europe/Brussels
   environment:
     PACKER_VERSION: 0.8.1
-    GCLOUD_PROJECT: "certain-nexus-865"
     BUILD: ${CIRCLE_BUILD_NUM}
     PREVIOUSBUILD: ${CIRCLE_PREVIOUS_BUILD_NUM}
 general:
