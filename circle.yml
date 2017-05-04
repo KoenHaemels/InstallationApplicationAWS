@@ -1,0 +1,105 @@
+---
+machine:
+  timezone: Europe/Brussels
+  environment:
+    PACKER_VERSION: 0.8.1
+    GCLOUD_PROJECT: "certain-nexus-865"
+    BUILD: ${CIRCLE_BUILD_NUM}
+    PREVIOUSBUILD: ${CIRCLE_PREVIOUS_BUILD_NUM}
+general:
+  branches:
+    only:
+      # List of branches to ignore
+      - master
+dependencies:
+  cache_directories:
+    - "~/bin"
+  pre:
+    # =======================
+    # Installation Packer
+    # =======================
+    - mkdir -p ~/packer
+    - wget https://releases.hashicorp.com/packer/0.12.0/packer_0.12.0_linux_amd64.zip
+    - unzip packer_0.12.0_linux_amd64.zip
+    - mv packer ~/bin/packer
+    - echo PROJECT_ID_GCLOUD
+    # =======================
+    # Installation GIT + clone repository
+    # =======================
+    - sudo apt-get install git -y
+    - mkdir -p ~/map
+    - cd ~/map
+    - git clone https://github.com/KoenHaemels/InstallationApplicationGcloud.git
+    - cd InstallationApplicationGcloud/
+    # =======================
+    # Installation / authentication GCLOUD
+    # =======================
+    - echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update alpha
+    - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    - sudo /opt/google-cloud-sdk/bin/gcloud config set project ${PROJECT_ID_GCLOUD}
+    - sudo apt-get update
+    - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+    # =======================
+    # Delete previous packer image
+    # =======================
+    # - sudo /opt/google-cloud-sdk/bin/gcloud compute images delete packer-image-stage -q
+    - sudo /opt/google-cloud-sdk/bin/gcloud compute images delete packer-image-stage-"${PREVIOUSBUILD}" -q
+    # =======================
+    # Change credentials
+    # =======================
+    #- /bin/sed -i "s|projectID|${PROJECT_ID_GCLOUD}|g" Credits/account.json
+    #- /bin/sed -i "s|privatekeyID|${PRIVATE_ID_KEY_GCLOUD}|g" Credits/account.json
+    #- /bin/sed -i "s|privateKEY|${PRIVATE_KEY_GCLOUD}|g" Credits/account.json
+    #- /bin/sed -i "s|clientEMAIL|${CLIENT_EMAIL_GCLOUD}|g" Credits/account.json
+    #- /bin/sed -i "s|clientID|${CLIENT_ID_GCLOUD}|g" Credits/account.json
+    #- /bin/sed -i "s|clientx509certURL|${CLIENT_X509_CERT_URL_GCLOUD}|g" Credits/account.json
+    #- /bin/sed -i "s|privateID|${PROJECT_ID_GCLOUD}|g" Credits/template.json
+    #- /bin/sed -i "s|sshUSERNAME|${SSH_USERNAME_GCLOUD}|g" Credits/template.json
+    #- /bin/sed -i "s|sshPASSWORD|${SSH_PASSWORD_GCLOUD}|g" Credits/template.json
+    #- sudo rm -r -f Credits/account.json
+    - sudo cp ${HOME}/gcloud-service-key.json Credits/account.json
+    - /bin/sed -i "s|accountFILE|Credits/account.json|g" Credits/template.json
+    - /bin/sed -i "s/projectID/"${PROJECT_ID_GCLOUD}"/g" Credits/template.json
+    # =======================
+
+test:
+  override:
+    # =======================
+    # Run installation of the application
+    # =======================
+    - ./main.sh
+    # =======================
+    # Check JSON file
+    # =======================
+    - ~/bin/packer validate Credits/template.json
+    # =======================
+deployment:
+  production:
+    pre:
+      - pyenv global 2.7.12
+  packer:
+    branch: master
+    commands:
+      # Change name to new BUILD ID
+      # =======================
+      - /bin/sed -i "s/template-file/template-file-"${BUILD}"/g" template.yml
+      - /bin/sed -i "s/packer-image-stage/packer-image-stage-"${BUILD}"/g" Credits/template.json
+      - /bin/sed -i "s/packer-image-stage/packer-image-stage-"${BUILD}"/g" template.yml
+      # =======================
+      # Build new image
+      # =======================
+      - ~/bin/packer build Credits/template.json
+      # =======================
+      # Create new instance
+      # =======================
+      - sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments create instance-"${BUILD}" --config template.yml --project=certain-nexus-865
+      # =======================
+      # Rolling update
+      # =======================
+      - sudo /opt/google-cloud-sdk/bin/gcloud alpha compute rolling-updates start --zone europe-west1-b --group=test-instance-groupmanager --template template-file-"${BUILD}" --max-num-concurrent-instances 1 --min-instance-update-time 1m
+      #- sudo /opt/google-cloud-sdk/bin/gcloud alpha compute instance-groups managed rolling-action start-update test-instance-groupmanager --version template=template-file-"${BUILD}" --min-ready 1m --max-unavailable 1 --zone europe-west1-b --force
+      # =======================
+      # Delete Previous instance
+      # =======================
+      - sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments delete instance-"${PREVIOUSBUILD}" -q

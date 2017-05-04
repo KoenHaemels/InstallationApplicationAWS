@@ -1,0 +1,26 @@
+{% set INSTANCE_TEMPLATE = properties['name'] %}
+
+resources:
+- name: {{ INSTANCE_TEMPLATE }}
+  type: compute.v1.instanceTemplate
+  properties:
+    properties:
+      machineType: {{ properties['machineType'] }}
+      disks:
+      - deviceName: boot
+        boot: true
+        type: PERSISTENT
+        autoDelete: true
+        mode: READ_WRITE
+        initializeParams:
+          sourceImage: {{ properties['image'] }}
+      networkInterfaces:
+      - network: global/networks/default
+      serviceAccounts:
+      - email: "stage-833@certain-nexus-865.iam.gserviceaccount.com"
+        scopes:
+        - "https://www.googleapis.com/auth/cloud-platform"
+        
+      tags:
+        items:
+        - http-server
