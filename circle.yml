@@ -35,12 +35,11 @@ dependencies:
     # =======================
     # Change credentials
     # =======================
+    - /bin/sed -i "s|acceskeyAZURE|"${ACCES_KEY_AZURE}"|g" Credits/template.json
     - /bin/sed -i "s|accessecretkeyAZURE|"${ACCES_SECRET_KEY_AZURE}"|g" Credits/template.json
-    - /bin/sed -i "s/acceskeyAZURE/"${ACCES_KEY_AZURE}"/g" Credits/template.json
-    - /bin/sed -i "s/imagename/packer-cvo-"${CIRCLE_BUILD_NUM}"/g" Credits/template.json
-    - /bin/sed -i "s/owners_AZURE/"${OWNERS_AZURE}"/g" Credits/template.json
+    - /bin/sed -i "s|imagename|packer-cvo-"${CIRCLE_BUILD_NUM}"|g" Credits/template.json
+    - /bin/sed -i "s|owners_AZURE|"${OWNERS_AZURE}"|g" Credits/template.json
     - sudo echo "${ACCES_KEY_AZURE}:${ACCES_SECRET_KEY_AZURE}" > ~/passwd-s3fs
-    
     # =======================
 
 test:
@@ -48,6 +47,7 @@ test:
     # =======================
     # Run installation of the application
     # =======================
+    - sudo chmod 777 main.sh
     - ./main.sh
     # =======================
     # Check JSON file
