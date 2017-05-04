@@ -28,7 +28,7 @@ sudo mkdir /var/InstallationApplicationAWS
 sudo mkdir /var/InstallationApplicationAWS/bucket
 sudo chmod 757 /var/InstallationApplicationAWS/bucket
 sudo chmod 777 /etc/fstab
-#sudo echo "test-stage-cvo /var/InstallationApplicationGcloud/bucket gcsfuse allow_other,rw,noauto,user,dir_mode=777,file_mode=777,key_file=/var/InstallationApplicationGcloud/Credits/account.json" >> /etc/fstab
+sudo echo "sudo s3fs https://s3.eu-central-1.amazonaws.com/test-stage-cvo /var/InstallationApplicationAWS/bucket -o allow_other -o passwd_file=/etc/passwd-s3fs -d -d -f -o f2 -o curldbg" >> /etc/fstab
 sudo chmod 777 /etc/fuse.conf
 sudo echo "user_allow_other" >> /etc/fuse.conf
 clear
