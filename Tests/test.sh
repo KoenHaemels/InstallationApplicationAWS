@@ -1,10 +1,12 @@
 #!/bin/bash
 #Test script
 #Check yaml files
-#Installation yamllint
+#Installation yamllint & Curl
 sudo apt-get update
 sudo apt-get install yamllint -y
+sudo apt-get install curl -y
 clear
+
 
 /usr/bin/yamllint -c /Tests/configyamllint.yml /var/InstallationApplicationAWS
 
