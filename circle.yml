@@ -39,10 +39,8 @@ dependencies:
     # =======================
     # Delete previous packer image
     # =======================
-    - echo ${PREVIOUSBUILD}
-    - aws ec2 describe-images --filters Name=name,Values=packer-cvo-"${CIRCLE_PREVIOUS_BUILD_NUM}" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminame.txt 
-    - cat aminame.txt
-    - aws ec2 deregister-image --image-id $(cat aminame.txt)
+    #- aws ec2 describe-images --filters Name=name,Values=packer-cvo-"${CIRCLE_PREVIOUS_BUILD_NUM}" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminame.txt 
+    #- aws ec2 deregister-image --image-id $(cat aminame.txt)
     # =======================
     # Change credentials
     # =======================
