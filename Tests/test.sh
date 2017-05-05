@@ -6,7 +6,7 @@ sudo apt-get update
 sudo apt-get install yamllint -y
 sudo apt-get install curl -y
 clear
-/usr/bin/yamllint -c /Tests/configyamllint.yml /var/InstallationApplicationAWS
+/usr/bin/yamllint -c Tests/configyamllint.yml /var/InstallationApplicationAWS
 
 #Check if apache is installed
 service=apache2
