@@ -4,12 +4,7 @@
       "type": "file",
       "source": "Credits/passwd-s3fs",
       "destination": "~/passwd-s3fs"
-    },
-  {  
-      "type": "file",
-      "source": "Credits/template.json",
-      "destination": "~/template.json"
-    },
+    }
   { 
   "type": "shell",
      "inline": [
