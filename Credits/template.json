@@ -4,7 +4,7 @@
       "type": "file",
       "source": "Credits/passwd-s3fs",
       "destination": "~/passwd-s3fs"
-    }
+    },
   { 
   "type": "shell",
      "inline": [
