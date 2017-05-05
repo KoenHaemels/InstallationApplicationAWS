@@ -57,7 +57,7 @@ test:
     # =======================
     # Test if yml files are correct
     # =======================
-    - /Tests/test.sh
+    - Tests/test.sh
     # =======================
 deployment:
   production:
