@@ -66,7 +66,8 @@ test:
     # =======================
     # Test if yml files are correct
     # =======================
-    - Tests/test.sh
+    - sudo apt-get install yamllint -y
+    - /usr/bin/yamllint -c Tests/configyamllint.yml /var/InstallationApplicationAWS
     # =======================
 deployment:
   production:
