@@ -29,8 +29,17 @@ dependencies:
     - sudo git clone https://github.com/KoenHaemels/InstallationApplicationAWS.git
     - cd InstallationApplicationAWS/
     # =======================
+    # Login to AWS cli
+    # =======================
+    - sudo apt-get install python-pip -y
+    - pip install --upgrade --user awscli
+    - aws configure set aws_access_key_id ${ACCES_KEY_AZURE}
+    - aws configure set aws_secret_access_key ${ACCES_SECRET_KEY_AZURE}
+    - aws configure set default.region eu-central-1
+    # =======================
     # Delete previous packer image
     # =======================
+    
     # =======================
     # Change credentials
     # =======================
