@@ -39,7 +39,7 @@ dependencies:
     # =======================
     # Delete previous packer image
     # =======================
-    
+    - aws ec2 deregister-image --image-id ami-fc419e93
     # =======================
     # Change credentials
     # =======================
