@@ -25,13 +25,21 @@ dependencies:
     # Installation GIT + clone repository
     # =======================
     - sudo apt-get install git -y
-    - mkdir -p ~/map
-    - cd ~/map
-    - git clone https://github.com/KoenHaemels/InstallationApplicationAWS.git
+    - cd /var
+    - sudo git clone https://github.com/KoenHaemels/InstallationApplicationAWS.git
     - cd InstallationApplicationAWS/
+    # =======================
+    # Login to AWS cli
+    # =======================
+    - sudo apt-get install python-pip -y
+    - pip install --upgrade --user awscli
+    - aws configure set aws_access_key_id ${ACCES_KEY_AZURE}
+    - aws configure set aws_secret_access_key ${ACCES_SECRET_KEY_AZURE}
+    - aws configure set default.region eu-central-1
     # =======================
     # Delete previous packer image
     # =======================
+    
     # =======================
     # Change credentials
     # =======================
@@ -41,8 +49,9 @@ dependencies:
     - /bin/sed -i "s|owners_AZURE|"${OWNERS_AZURE}"|g" Credits/template.json
     - sudo echo "${ACCES_KEY_AZURE}:${ACCES_SECRET_KEY_AZURE}" > ~/passwd-s3fs
     - sudo cat ~/passwd-s3fs
-    - sudo cp ~/passwd-s3fs Credits/passwd-s3fs
-    - sudo chmod 777 main.sh
+    - sudo mv ~/passwd-s3fs Credits/passwd-s3fs
+    - sudo chmod +x main.sh
+    - sudo chmod +x Tests/test.sh
     # =======================
 test:
   override:
