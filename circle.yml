@@ -64,11 +64,6 @@ test:
     # =======================
     - ~/bin/packer validate Credits/template.json
     # =======================
-    # Test if yml files are correct
-    # =======================
-    - sudo apt-get update && sudo apt-get install yamllint -y
-    - /usr/bin/yamllint -c Tests/configyamllint.yml /var/InstallationApplicationAWS
-    # =======================
 deployment:
   production:
     pre:
