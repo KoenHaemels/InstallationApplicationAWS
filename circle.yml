@@ -26,7 +26,7 @@ dependencies:
     # =======================
     - sudo apt-get install git -y
     - cd /var
-    - sudo git clone https://github.com/KoenHaemels/InstallationApplicationAWS.git
+    - git clone https://github.com/KoenHaemels/InstallationApplicationAWS.git
     - cd InstallationApplicationAWS/
     # =======================
     # Login to AWS cli
