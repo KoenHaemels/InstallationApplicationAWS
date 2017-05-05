@@ -1,10 +1,12 @@
 #!/bin/bash
 #Test script
 #Check yaml files
-#Installation yamllint
-#sudo apt-get update
-#sudo apt-get install yamllint -y
-#clear
+#Installation yamllint & Curl
+sudo apt-get update
+sudo apt-get install yamllint -y
+sudo apt-get install curl -y
+clear
+
 
 /usr/bin/yamllint -c /Tests/configyamllint.yml /var/InstallationApplicationAWS
 
@@ -33,7 +35,7 @@ else
 fi
 
 #Check if bucket is mounted
-if grep -qs '/var/InstallationApplicationGcloud/bucket' /proc/mounts; then
+if grep -qs '/var/InstallationApplicationAWS/bucket' /proc/mounts; then
   echo "Bucket is mounted."
 else
   echo "Bucket is not mounted."
