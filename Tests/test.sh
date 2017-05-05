@@ -33,7 +33,7 @@ else
 fi
 
 #Check if bucket is mounted
-if grep -qs '/var/InstallationApplicationGcloud/bucket' /proc/mounts; then
+if grep -qs '/var/InstallationApplicationAWS/bucket' /proc/mounts; then
   echo "Bucket is mounted."
 else
   echo "Bucket is not mounted."
