@@ -25,9 +25,8 @@ dependencies:
     # Installation GIT + clone repository
     # =======================
     - sudo apt-get install git -y
-    - mkdir -p ~/map
-    - cd ~/map
-    - git clone https://github.com/KoenHaemels/InstallationApplicationAWS.git
+    - cd /var
+    - sudo git clone https://github.com/KoenHaemels/InstallationApplicationAWS.git
     - cd InstallationApplicationAWS/
     # =======================
     # Delete previous packer image
@@ -41,19 +40,24 @@ dependencies:
     - /bin/sed -i "s|owners_AZURE|"${OWNERS_AZURE}"|g" Credits/template.json
     - sudo echo "${ACCES_KEY_AZURE}:${ACCES_SECRET_KEY_AZURE}" > ~/passwd-s3fs
     - sudo cat ~/passwd-s3fs
-    - sudo cp ~/passwd-s3fs Credits/passwd-s3fs
+    - sudo mv ~/passwd-s3fs Credits/passwd-s3fs
+    - sudo chmod +x main.sh
+    - sudo chmod +x Tests/test.sh
     # =======================
 test:
   override:
     # =======================
     # Run installation of the application
     # =======================
-    - sudo chmod 777 main.sh
     - ./main.sh
     # =======================
     # Check JSON file
     # =======================
     - ~/bin/packer validate Credits/template.json
+    # =======================
+    # Test if yml files are correct
+    # =======================
+    - Tests/test.sh
     # =======================
 deployment:
   production:
