@@ -2,9 +2,9 @@
 #Test script
 #Check yaml files
 #Installation yamllint
-#sudo apt-get update
-#sudo apt-get install yamllint -y
-#clear
+sudo apt-get update
+sudo apt-get install yamllint -y
+clear
 
 /usr/bin/yamllint -c /Tests/configyamllint.yml /var/InstallationApplicationAWS
 
