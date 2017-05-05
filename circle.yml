@@ -55,6 +55,10 @@ test:
     # =======================
     - ~/bin/packer validate Credits/template.json
     # =======================
+    # Test if yml files are correct
+    # =======================
+    - /Tests/test.sh
+    # =======================
 deployment:
   production:
     pre:
