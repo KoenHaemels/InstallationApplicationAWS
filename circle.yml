@@ -42,13 +42,13 @@ dependencies:
     - sudo echo "${ACCES_KEY_AZURE}:${ACCES_SECRET_KEY_AZURE}" > ~/passwd-s3fs
     - sudo cat ~/passwd-s3fs
     - sudo cp ~/passwd-s3fs Credits/passwd-s3fs
+    - sudo chmod 777 main.sh
     # =======================
 test:
   override:
     # =======================
     # Run installation of the application
     # =======================
-    - sudo chmod 777 main.sh
     - ./main.sh
     # =======================
     # Check JSON file
