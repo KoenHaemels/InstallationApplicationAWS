@@ -32,6 +32,21 @@
 </label>
     <input type="submit" value="Upload Image" name="submit">
 </form>
+<div class="well">
+	<h2><u>Files bucket:</u></h2>
+	<?php
+	$path = "/var/InstallationApplicationAWS/bucket/";
+	$dh = opendir($path);
+	$i=1;
+	while (($file = readdir($dh)) !== false) {
+	if($file != "." && $file != "..") {
+        	echo "<br /> <p>$file</p>";
+        	$i++;
+    		}
+	}
+closedir($dh);
+?>
+</div>
 </div>
     </body>
 </html>
