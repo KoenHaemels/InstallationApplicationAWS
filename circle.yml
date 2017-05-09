@@ -3,8 +3,6 @@ machine:
   timezone: Europe/Brussels
   environment:
     PACKER_VERSION: 0.8.1
-    BUILD: ${CIRCLE_BUILD_NUM}
-    PREVIOUSBUILD: ${CIRCLE_PREVIOUS_BUILD_NUM}
 general:
   branches:
     only:
@@ -81,15 +79,19 @@ deployment:
       - aws ec2 describe-images --filters Name=name,Values=packer-cvo-"$(cat previousnummer.txt)" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminame.txt 
       - aws ec2 deregister-image --image-id $(cat aminame.txt)
       # =======================
-      # Create new instance
+      # Create new launcher
       # =======================
-      #- sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments create instance-"${BUILD}" --config template.yml --project=certain-nexus-865
+      - sudo chmod +x init-agent-instance.sh
+      - aws ec2 describe-images --filters Name=name,Values=packer-cvo-"$(cat nummer.txt)" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminameNEW.txt
+      - cat aminameNEW.txt
+      - aws ec2 describe-security-groups --filters Name=group-name,Values=instance_sg | grep "GroupId" | /bin/sed -e 's/GroupId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > groupID.txt
+      - cat groupID.txt
+      - aws autoscaling create-launch-configuration --launch-configuration-name test-lc-"$(cat nummer.txt)" --image-id $(cat aminameNEW.txt) --instance-type t2.micro --no-associate-public-ip-address --security-groups $(cat groupID.txt) --key-name stage-cvo --user-data file://init-agent-instance.sh
+      - aws cloudformation update-stack --stack-name cvo-asg --use-previous-template --parameters ParameterKey=LaunchConfig,ParameterValue=test-lc-"$(cat nummer.txt)"
       # =======================
-      # Rolling update
+      # Push new buildnumber to github
       # =======================
-      #- sudo /opt/google-cloud-sdk/bin/gcloud alpha compute rolling-updates start --zone europe-west1-b --group=test-instance-groupmanager --template template-file-"${BUILD}" --max-num-concurrent-instances 1 --min-instance-update-time 1m
-      #- sudo /opt/google-cloud-sdk/bin/gcloud alpha compute instance-groups managed rolling-action start-update test-instance-groupmanager --version template=template-file-"${BUILD}" --min-ready 1m --max-unavailable 1 --zone europe-west1-b --force
-      # =======================
-      # Delete Previous instance
-      # =======================
-      #- sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments delete instance-"${PREVIOUSBUILD}" -q
+      - git init
+      - git add nummer.txt
+      - git commit -m "Nummer [ci skip]"
+      - git push origin master
