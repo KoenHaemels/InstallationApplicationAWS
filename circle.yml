@@ -57,7 +57,7 @@ test:
     # =======================
     # Run installation of the application
     # =======================
-    - ./main.sh
+    #- ./main.sh
     # =======================
     # Check JSON file
     # =======================
