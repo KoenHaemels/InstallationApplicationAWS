@@ -4,7 +4,7 @@
       "type": "file",
       "source": "Credits/passwd-s3fs",
       "destination": "~/passwd-s3fs"
-    }
+    },
   { 
   "type": "shell",
      "inline": [
@@ -15,7 +15,6 @@
         "sudo chmod +x main.sh",
         "sudo mv ~/passwd-s3fs /etc",
         "sudo chmod 640 /etc/passwd-s3fs",
-        "sudo mv ~/template.json Credits/",
         "./main.sh"
 ]
 }
