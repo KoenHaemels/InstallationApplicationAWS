@@ -3,8 +3,6 @@ machine:
   timezone: Europe/Brussels
   environment:
     PACKER_VERSION: 0.8.1
-    BUILD: ${CIRCLE_BUILD_NUM}
-    PREVIOUSBUILD: ${CIRCLE_PREVIOUS_BUILD_NUM}
 general:
   branches:
     only:
