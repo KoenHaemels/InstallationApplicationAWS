@@ -89,7 +89,7 @@ deployment:
       - aws autoscaling create-launch-configuration --launch-configuration-name test-lc-"$(cat nummer.txt)" --image-id $(cat aminameNEW.txt) --instance-type t2.micro --no-associate-public-ip-address --security-groups $(cat groupID.txt) --key-name stage-cvo --user-data file://init-agent-instance.sh
       - aws cloudformation update-stack --stack-name cvo-asg --use-previous-template --parameters ParameterKey=LaunchConfig,ParameterValue=test-lc-"$(cat nummer.txt)"
       # =======================
-      # Create new launcher
+      # Delete previous
       # =======================
       - aws autoscaling delete-launch-configuration --launch-configuration-name test-lc-"$(cat previousnummer.txt)"
       # =======================
