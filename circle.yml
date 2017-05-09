@@ -91,6 +91,7 @@ deployment:
       # =======================
       # Delete previous
       # =======================
+      - sleep 20
       - aws autoscaling delete-launch-configuration --launch-configuration-name test-lc-"$(cat previousnummer.txt)"
       # =======================
       # Push new buildnumber to github
