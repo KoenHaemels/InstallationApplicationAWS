@@ -37,16 +37,16 @@ dependencies:
     - aws configure set aws_secret_access_key ${ACCES_SECRET_KEY_AZURE}
     - aws configure set default.region eu-central-1
     # =======================
-    # Delete previous packer image
+    # Buildnumber counter
     # =======================
-    - aws ec2 describe-images --filters Name=name,Values=packer-cvo-"${CIRCLE_PREVIOUS_BUILD_NUM}" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminame.txt 
-    - aws ec2 deregister-image --image-id $(cat aminame.txt)
+    - expr $(cat nummer.txt) + 1 > nummer.txt
+    - expr $(cat nummer.txt) - 1 > previousnummer.txt
     # =======================
     # Change credentials
     # =======================
     - /bin/sed -i "s|acceskeyAZURE|"${ACCES_KEY_AZURE}"|g" Credits/template.json
     - /bin/sed -i "s|accessecretkeyAZURE|"${ACCES_SECRET_KEY_AZURE}"|g" Credits/template.json
-    - /bin/sed -i "s|imagename|packer-cvo-"${CIRCLE_BUILD_NUM}"|g" Credits/template.json
+    - /bin/sed -i "s|imagename|packer-cvo-"$(cat nummer.txt)"|g" Credits/template.json
     - /bin/sed -i "s|owners_AZURE|"${OWNERS_AZURE}"|g" Credits/template.json
     - sudo echo "${ACCES_KEY_AZURE}:${ACCES_SECRET_KEY_AZURE}" > ~/passwd-s3fs
     - sudo cat ~/passwd-s3fs
@@ -75,6 +75,11 @@ deployment:
       # Build new image
       # =======================
       - ~/bin/packer build Credits/template.json
+      # =======================
+      # Delete previous packer image
+      # =======================
+      - aws ec2 describe-images --filters Name=name,Values=packer-cvo-"$(cat previousnummer.txt)" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminame.txt 
+      - aws ec2 deregister-image --image-id $(cat aminame.txt)
       # =======================
       # Create new instance
       # =======================
