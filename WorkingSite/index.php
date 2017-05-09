@@ -19,8 +19,7 @@
 <div class="container">
   <h1>Demo Applicatie</h1>
   <h3>Hostname: <?php echo gethostname(); ?></h3>
-  <h4>IP-address: <?php echo getHostByName(getHostName());?></h4>
-	<h3>NIEUW</h3>	
+  <h4>IP-address: <?php echo getHostByName(getHostName());?></h4>	
 	<div> 
           <canvas width="150" height="150" data-jdenticon-hash="<?php echo hash('sha256', gethostname()); ?>"></canvas> 
 	    </div>
@@ -34,18 +33,20 @@
 </form>
 <div class="well">
 	<h2><u>Files bucket:</u></h2>
-	<?php
-	$path = "/var/InstallationApplicationAWS/bucket/";
-	$dh = opendir($path);
-	$i=1;
-	while (($file = readdir($dh)) !== false) {
-	if($file != "." && $file != "..") {
-        	echo "<br /> <p>$file</p>";
-        	$i++;
-    		}
-	}
-closedir($dh);
+<?php
+ if ($handle = opendir('/var/InstallationApplicationAWS/bucket')) {
+   while (false !== ($file = readdir($handle)))
+      {
+          if ($file != "." && $file != "..")
+          {
+                $thelist .= '<p>'.$file.'</p>';
+          }
+       }
+  closedir($handle);
+  }       
 ?>
+<P>List of files:</p>
+<P><?=$thelist?></p>
 </div>
 </div>
     </body>
