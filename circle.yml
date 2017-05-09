@@ -83,7 +83,8 @@ deployment:
       # =======================
       # Create new instance
       # =======================
-      #- sudo /opt/google-cloud-sdk/bin/gcloud deployment-manager deployments create instance-"${BUILD}" --config template.yml --project=certain-nexus-865
+      - aws ec2 describe-images --filters Name=name,Values=packer-cvo-"$(cat nummer.txt)" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminameNEW.txt 
+      - aws autoscaling create-launch-configuration --launch-configuration-name test-lc-"$(cat nummer.txt)" --image-id $(cat aminameNEW.txt) --instance-type t2.micro --no-associate-public-ip-address --security-groups sg-a29916c9 --key-name stage-cvo --user-data file://init-agent-instance.sh
       # =======================
       # Rolling update
       # =======================
