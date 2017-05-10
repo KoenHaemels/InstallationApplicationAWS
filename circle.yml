@@ -47,6 +47,7 @@ dependencies:
     - /bin/sed -i "s|accessecretkeyAWS|"${ACCES_SECRET_KEY_AWS}"|g" Credits/template.json
     - /bin/sed -i "s|imagename|packer-cvo-"$(cat nummer.txt)"|g" Credits/template.json
     - /bin/sed -i "s|owners_AWS|"${OWNERS_AWS}"|g" Credits/template.json
+    - /bin/sed -i "s|regionname|"${REGION}"|g" Credits/template.json
     - sudo echo "${ACCES_KEY_AWS}:${ACCES_SECRET_KEY_AWS}" > ~/passwd-s3fs
     - sudo cat ~/passwd-s3fs
     - sudo mv ~/passwd-s3fs Credits/passwd-s3fs
