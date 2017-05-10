@@ -28,6 +28,13 @@ sudo chmod 757 /var/InstallationApplicationAWS/bucket
 sudo chmod 777 /etc/fstab
 sudo echo "test-stage-cvo /var/InstallationApplicationAWS/bucket fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
 clear
+
+#Mount bucket at startup
+sudo chmod 777 /etc/rc.local
+sudo sed -i '$ d' /etc/rc.local
+sudo echo "mount /var/InstallationApplicationAWS/bucket" >> /etc/rc.local
+sudo echo "exit 0" >> /etc/rc.local
+
 sudo mount /var/InstallationApplicationAWS/bucket
 
 #Run tests
