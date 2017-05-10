@@ -98,9 +98,10 @@ deployment:
       - aws autoscaling create-launch-configuration --launch-configuration-name "${LAUNCH_CONFIGURATION_NAME}"-"$(cat nummer.txt)" --image-id $(cat aminameNEW.txt) --instance-type ${INSTANCE_TYPE} --no-associate-public-ip-address --security-groups $(cat groupID.txt) --key-name ${KEY_NAME} --user-data file://init-agent-instance.sh
       - aws cloudformation update-stack --stack-name ${STACK_NAME} --use-previous-template --parameters ParameterKey=LaunchConfig,ParameterValue="${LAUNCH_CONFIGURATION_NAME}"-"$(cat nummer.txt)"
       # =======================
-      # Create new launcher
+      # Delete previous
       # =======================
       - aws autoscaling delete-launch-configuration --launch-configuration-name "${LAUNCH_CONFIGURATION_NAME}"-"$(cat previousnummer.txt)"
+      - sleep 20
       # =======================
       # Push new buildnumber to github
       # =======================
