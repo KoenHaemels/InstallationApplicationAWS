@@ -3,6 +3,14 @@ machine:
   timezone: Europe/Brussels
   environment:
     PACKER_VERSION: 0.8.1
+    IMAGE_NAME: "packer-cvo"
+    REGION: "eu-central-1"
+    # Launch configuration
+    LAUNCH_CONFIGURATION_NAME: "test-lc"
+    INSTANCE_TYPE: "t2.micro"
+    KEY_NAME: "stage-cvo"
+    # Stack
+    STACK_NAME: "cvo-asg"
 general:
   branches:
     only:
@@ -31,9 +39,9 @@ dependencies:
     # =======================
     - sudo apt-get install python-pip -y
     - pip install --upgrade --user awscli
-    - aws configure set aws_access_key_id ${ACCES_KEY_AZURE}
-    - aws configure set aws_secret_access_key ${ACCES_SECRET_KEY_AZURE}
-    - aws configure set default.region eu-central-1
+    - aws configure set aws_access_key_id ${ACCES_KEY_AWS}
+    - aws configure set aws_secret_access_key ${ACCES_SECRET_KEY_AWS}
+    - aws configure set default.region ${REGION}
     # =======================
     # Buildnumber counter
     # =======================
@@ -42,11 +50,12 @@ dependencies:
     # =======================
     # Change credentials
     # =======================
-    - /bin/sed -i "s|acceskeyAZURE|"${ACCES_KEY_AZURE}"|g" Credits/template.json
-    - /bin/sed -i "s|accessecretkeyAZURE|"${ACCES_SECRET_KEY_AZURE}"|g" Credits/template.json
-    - /bin/sed -i "s|imagename|packer-cvo-"$(cat nummer.txt)"|g" Credits/template.json
-    - /bin/sed -i "s|owners_AZURE|"${OWNERS_AZURE}"|g" Credits/template.json
-    - sudo echo "${ACCES_KEY_AZURE}:${ACCES_SECRET_KEY_AZURE}" > ~/passwd-s3fs
+    - /bin/sed -i "s|acceskeyAWS|"${ACCES_KEY_AWS}"|g" Credits/template.json
+    - /bin/sed -i "s|accessecretkeyAWS|"${ACCES_SECRET_KEY_AWS}"|g" Credits/template.json
+    - /bin/sed -i "s|imagename|"${IMAGE_NAME}"-"$(cat nummer.txt)"|g" Credits/template.json
+    - /bin/sed -i "s|owners_AWS|"${OWNERS_AWS}"|g" Credits/template.json
+    - /bin/sed -i "s|regionname|"${REGION}"|g" Credits/template.json
+    - sudo echo "${ACCES_KEY_AWS}:${ACCES_SECRET_KEY_AWS}" > ~/passwd-s3fs
     - sudo cat ~/passwd-s3fs
     - sudo mv ~/passwd-s3fs Credits/passwd-s3fs
     - sudo chmod +x main.sh
@@ -57,7 +66,7 @@ test:
     # =======================
     # Run installation of the application
     # =======================
-    #- ./main.sh
+    - ./main.sh
     # =======================
     # Check JSON file
     # =======================
@@ -76,23 +85,23 @@ deployment:
       # =======================
       # Delete previous packer image
       # =======================
-      - aws ec2 describe-images --filters Name=name,Values=packer-cvo-"$(cat previousnummer.txt)" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminame.txt
+      - aws ec2 describe-images --filters Name=name,Values="${IMAGE_NAME}"-"$(cat previousnummer.txt)" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminame.txt
       - aws ec2 deregister-image --image-id $(cat aminame.txt)
       # =======================
       # Create new launcher
       # =======================
       - sudo chmod +x init-agent-instance.sh
-      - aws ec2 describe-images --filters Name=name,Values=packer-cvo-"$(cat nummer.txt)" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminameNEW.txt
+      - aws ec2 describe-images --filters Name=name,Values="${IMAGE_NAME}"-"$(cat nummer.txt)" | grep "ImageId" | /bin/sed -e 's/ImageId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > aminameNEW.txt
       - cat aminameNEW.txt
       - aws ec2 describe-security-groups --filters Name=group-name,Values=instance_sg | grep "GroupId" | /bin/sed -e 's/GroupId//g' -e 's/"//g' -e 's/,//g' -e 's/://g' -e 's/             //g' > groupID.txt
       - cat groupID.txt
-      - aws autoscaling create-launch-configuration --launch-configuration-name test-lc-"$(cat nummer.txt)" --image-id $(cat aminameNEW.txt) --instance-type t2.micro --no-associate-public-ip-address --security-groups $(cat groupID.txt) --key-name stage-cvo --user-data file://init-agent-instance.sh
-      - aws cloudformation update-stack --stack-name cvo-asg --use-previous-template --parameters ParameterKey=LaunchConfig,ParameterValue=test-lc-"$(cat nummer.txt)"
+      - aws autoscaling create-launch-configuration --launch-configuration-name "${LAUNCH_CONFIGURATION_NAME}"-"$(cat nummer.txt)" --image-id $(cat aminameNEW.txt) --instance-type ${INSTANCE_TYPE} --no-associate-public-ip-address --security-groups $(cat groupID.txt) --key-name ${KEY_NAME} --user-data file://init-agent-instance.sh
+      - aws cloudformation update-stack --stack-name ${STACK_NAME} --use-previous-template --parameters ParameterKey=LaunchConfig,ParameterValue="${LAUNCH_CONFIGURATION_NAME}"-"$(cat nummer.txt)"
       # =======================
       # Delete previous
       # =======================
+      - aws autoscaling delete-launch-configuration --launch-configuration-name "${LAUNCH_CONFIGURATION_NAME}"-"$(cat previousnummer.txt)"
       - sleep 20
-      - aws autoscaling delete-launch-configuration --launch-configuration-name test-lc-"$(cat previousnummer.txt)"
       # =======================
       # Push new buildnumber to github
       # =======================
