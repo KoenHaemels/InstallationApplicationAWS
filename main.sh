@@ -26,7 +26,7 @@ clear
 sudo mkdir /var/InstallationApplicationAWS/bucket
 sudo chmod 757 /var/InstallationApplicationAWS/bucket
 sudo chmod 777 /etc/fstab
-sudo echo "test-stage-cvo /var/InstallationApplicationAWS/bucket fuse.s3fs _netdev,allow_other 0 0" >> /etc/fstab
+sudo echo "test-stage-cvo /var/InstallationApplicationAWS/bucket fuse.s3fs _netdev,allow_other,nonempty 0 0" >> /etc/fstab
 clear
 
 #Mount bucket at startup
